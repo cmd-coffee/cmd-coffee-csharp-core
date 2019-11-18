@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Castle.Core.Internal;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -9,7 +10,21 @@ namespace CmdCoffee.Console.Test
     public class CommandMapperTest
     {
         [Fact]
-        public void CommandMapper_CommandsList_ReturnsDictionaryOfDescriptionsByNames()
+        public void CommandsList_CommandsNull_ReturnsEmptyDictionary()
+        {
+            var commandMapper = new CommandMapper(null);
+            commandMapper.CommandsList.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void CommandsList_NoCommands_ReturnsEmptyDictionary()
+        {
+            var commandMapper = new CommandMapper();
+            commandMapper.CommandsList.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void CommandsList_CommandsExist_ReturnsDictionaryOfDescriptionsByNames()
         {
             var mockCoffeeCommand = new Mock<ICoffeeCommand>();
             mockCoffeeCommand.Setup(c => c.Name).Returns("first");
@@ -37,10 +52,12 @@ namespace CmdCoffee.Console.Test
 
     public class CommandMapper
     {
-        private readonly ICoffeeCommand[] _coffeeCommands;
+        private readonly IEnumerable<ICoffeeCommand> _coffeeCommands;
 
         public CommandMapper(params ICoffeeCommand[] coffeeCommands)
         {
+            if (coffeeCommands == null)
+                coffeeCommands = new ICoffeeCommand[0];
             _coffeeCommands = coffeeCommands;
         }
 
