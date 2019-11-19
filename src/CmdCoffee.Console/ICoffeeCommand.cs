@@ -4,5 +4,6 @@ namespace CmdCoffee.Console
     {
         string Name { get; }
         string Description { get; }
+        void Execute();
     }
 }

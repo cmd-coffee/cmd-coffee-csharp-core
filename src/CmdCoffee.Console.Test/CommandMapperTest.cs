@@ -1,5 +1,3 @@
-using System.Collections;
-using Castle.Core.Internal;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -12,14 +10,14 @@ namespace CmdCoffee.Console.Test
         public void CommandsList_CommandsNull_ReturnsEmptyDictionary()
         {
             var commandMapper = new CommandMapper(null);
-            commandMapper.CommandsList.Should().BeEmpty();
+            commandMapper.Commands.Should().BeEmpty();
         }
 
         [Fact]
         public void CommandsList_NoCommands_ReturnsEmptyDictionary()
         {
             var commandMapper = new CommandMapper();
-            commandMapper.CommandsList.Should().BeEmpty();
+            commandMapper.Commands.Should().BeEmpty();
         }
 
         [Fact]
@@ -39,13 +37,13 @@ namespace CmdCoffee.Console.Test
 
             var commandMapper = new CommandMapper(mockCoffeeCommand.Object, mockCoffeeCommand2.Object, mockCoffeeCommand3.Object);
 
-            var commandsList = commandMapper.CommandsList;
+            var commandsList = commandMapper.Commands;
             commandsList.Count.Should().Be(3);
-            commandsList["first"].Should().Be("does some stuff");
+            commandsList["first"].Description.Should().Be("does some stuff");
 
-            commandsList["second"].Should().Be("does some other stuff");
+            commandsList["second"].Description.Should().Be("does some other stuff");
 
-            commandsList["third"].Should().Be("does some fun stuff");
+            commandsList["third"].Description.Should().Be("does some fun stuff");
         }
     }
 }

@@ -5,4 +5,8 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CmdCoffee.Client\CmdCoffee.Client.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -13,14 +13,14 @@ namespace CmdCoffee.Console
             _coffeeCommands = coffeeCommands;
         }
 
-        public IDictionary<string, string> CommandsList
+        public IDictionary<string, ICoffeeCommand> Commands
         {
             get
             {
-                var commandsList = new Dictionary<string, string>();
+                var commandsList = new Dictionary<string, ICoffeeCommand>();
                 foreach (var coffeeCommand in _coffeeCommands)
                 {
-                    commandsList[coffeeCommand.Name] = coffeeCommand.Description;
+                    commandsList[coffeeCommand.Name] = coffeeCommand;
                 }
 
                 return commandsList;
