@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace CmdCoffee.Console
+namespace CmdCoffee.Cli
 {
     public static class TableParserExtensions
     {

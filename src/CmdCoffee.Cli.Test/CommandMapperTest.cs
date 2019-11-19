@@ -2,7 +2,7 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace CmdCoffee.Console.Test
+namespace CmdCoffee.Cli.Test
 {
     public class CommandMapperTest
     {

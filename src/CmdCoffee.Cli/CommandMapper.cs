@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CmdCoffee.Console
+namespace CmdCoffee.Cli
 {
     public class CommandMapper
     {

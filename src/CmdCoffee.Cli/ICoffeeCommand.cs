@@ -1,4 +1,4 @@
-namespace CmdCoffee.Console
+namespace CmdCoffee.Cli
 {
     public interface ICoffeeCommand 
     {

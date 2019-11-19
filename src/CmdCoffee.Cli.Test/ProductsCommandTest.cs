@@ -1,7 +1,8 @@
+using CmdCoffee.Cli;
 using FluentAssertions;
 using Xunit;
 
-namespace CmdCoffee.Console.Test
+namespace CmdCoffee.Cli.Test
 {
     public class ProductsCommandTest
     {

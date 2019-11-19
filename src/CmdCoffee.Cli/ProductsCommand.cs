@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CmdCoffee.Client;
 
-namespace CmdCoffee.Console
+namespace CmdCoffee.Cli
 {
 
     public class ProductsCommand : ICoffeeCommand
