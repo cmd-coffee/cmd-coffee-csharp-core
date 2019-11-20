@@ -8,30 +8,35 @@ namespace CmdCoffee.Cli
     {
         static void Main(string[] args)
         {
-            var enterSelection = "Please enter selection. Type 'help' for options; 'q' to quit.";
 
             Console.WriteLine("Welcome to cmd.coffee.");
-            Console.WriteLine(enterSelection);
             var commandMapper = new CommandMapper(new ProductsCommand());
-
+ 
+            bool NeedInput()
+            {
+                return args?.Length < 1;
+            }
+            
             void GetInput()
             {
+                const string enterSelection = "Please enter selection. Type 'help' for options; 'q' to quit.";
+
                 do
                 {
+                    Console.WriteLine(enterSelection);
                     var input = System.Console.ReadLine();
                     args = input?.Split(" ");
-                } while (args?.Length < 1);
-
+                } while (NeedInput());
             }
 
-            if (args?.Length < 1) 
+            if (NeedInput()) 
                 GetInput();
 
             var commands = commandMapper.Commands;
 
             while (args[0] != "q")
             {
-                string output = "";
+                var output = "";
                 var command = args[0];
 
                 if (command == "help")
@@ -47,8 +52,6 @@ namespace CmdCoffee.Cli
                 }
 
                 Console.WriteLine(output);
-
-                Console.WriteLine(enterSelection);
 
                 GetInput();
             }

@@ -41,7 +41,8 @@ namespace CmdCoffee.Cli
 
                 var product = result?.FirstOrDefault(p => p.code == productCode?.ToUpper());
 
-                output = product != null ? (string) _outputGenerator.GeneratePairs(product) : $"no product found: {productCode}";
+                output = product != null ? (string) _outputGenerator.GeneratePairs(product, "Product Details") 
+                    : $"no product found: {productCode}";
             }
 
             return output;
