@@ -8,6 +8,8 @@ using System.Text;
 
 namespace CmdCoffee.Cli
 {
+
+    //original source: https://github.com/Robert-McGinley/TableParser
     public static class TableParserExtensions
     {
         public static string ToStringTable<T>(this IEnumerable<T> values, string[] columnHeaders,

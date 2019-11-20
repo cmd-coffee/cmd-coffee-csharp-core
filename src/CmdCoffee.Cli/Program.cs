@@ -23,8 +23,6 @@ namespace CmdCoffee.Cli
                 if (command == "help")
                 {
                     output = commander.Help;
-//                    output = new OutputGenerator().GenerateTable(commands, new[] {"Command", "Description"},
-//                        kvp => $"{kvp.Value.Name} {kvp.Value.Parameters}", kvp => kvp.Value.Description);
                 }
 
                 else if (!string.IsNullOrEmpty(command))

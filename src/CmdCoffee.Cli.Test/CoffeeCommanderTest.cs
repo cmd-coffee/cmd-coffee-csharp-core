@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -53,6 +54,7 @@ namespace CmdCoffee.Cli.Test
             commandMapper.CoffeeCommands.Should().BeEmpty();
         }
 
+
         [Fact]
         public void CommandsList_CommandsExist_ReturnsDictionaryOfDescriptionsByNames()
         {
@@ -79,8 +81,60 @@ namespace CmdCoffee.Cli.Test
                     It.IsAny<Func<KeyValuePair<string, ICoffeeCommand>, object>[]>()))
                 .Returns("hi");
 
+
             _coffeeCommander.Help.Should().Be("hi");
         }
 
+        [Fact]
+        public void Help_CommandHasParameter_IncludesParameterInOutput()
+        {
+            _mockCoffeeCommand.Setup(cc => cc.Parameters).Returns("[param1]");
+
+            VerifyGenerateTable((commands, headers, valueSelectors) =>
+            {
+                var commandOutputSelector = valueSelectors[0];
+                commandOutputSelector.Invoke(_coffeeCommands.First()).Should().Be("first [param1]");
+            });
+
+            var result = _coffeeCommander.Help;
+        }
+
+        [Fact]
+        public void Help_CommandHasNoParameter_OnlyNameInOutput()
+        {
+
+            VerifyGenerateTable((commands, headers, valueSelectors) =>
+            {
+                var commandOutputSelector = valueSelectors[0];
+                commandOutputSelector.Invoke(_coffeeCommands.First()).ToString().Trim().Should().Be("first");
+            });
+
+            var result = _coffeeCommander.Help;
+        }
+
+        [Fact]
+        public void Help_CommandHasParameter_IncludesDescriptionInOutput()
+        {
+            _mockCoffeeCommand.Setup(c => c.Description).Returns("does some stuff");
+
+            VerifyGenerateTable((commands, headers, valueSelectors) =>
+            {
+                var descriptionSelector = valueSelectors[1];
+                descriptionSelector.Invoke(_coffeeCommands.First()).Should().Be("does some stuff");
+            });
+
+            var result = _coffeeCommander.Help;
+        }
+
+        private void VerifyGenerateTable(Action<IEnumerable<KeyValuePair<string, ICoffeeCommand>>, string[], Func<KeyValuePair<string, ICoffeeCommand>, object>[]> verifyParams)
+        {
+            _mockOutputGenerator.Setup(og => og.GenerateTable(
+                    It.IsAny<IEnumerable<KeyValuePair<string, ICoffeeCommand>>>(),
+                    It.IsAny<string[]>(),
+                    It.IsAny<Func<KeyValuePair<string, ICoffeeCommand>, object>[]>()))
+                .Callback<IEnumerable<KeyValuePair<string, ICoffeeCommand>>, string[],
+                        Func<KeyValuePair<string, ICoffeeCommand>, object>[]>
+                    (verifyParams);
+        }
     }
 }
