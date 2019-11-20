@@ -9,12 +9,12 @@ namespace CmdCoffee.Cli.Test
 {
     public class CoffeeCommanderTest
     {
-        private CoffeeCommander _coffeeCommander;
-        private Mock<IOutputGenerator> _mockOutputGenerator;
-        private Mock<ICoffeeCommand> _mockCoffeeCommand;
-        private Mock<ICoffeeCommand> _mockCoffeeCommand2;
-        private Mock<ICoffeeCommand> _mockCoffeeCommand3;
-        private Dictionary<string, ICoffeeCommand> _coffeeCommands;
+        private readonly CoffeeCommander _coffeeCommander;
+        private readonly Mock<IOutputGenerator> _mockOutputGenerator;
+        private readonly Mock<ICoffeeCommand> _mockCoffeeCommand;
+        private readonly Mock<ICoffeeCommand> _mockCoffeeCommand2;
+        private readonly Mock<ICoffeeCommand> _mockCoffeeCommand3;
+        private readonly Dictionary<string, ICoffeeCommand> _coffeeCommands;
 
         public CoffeeCommanderTest()
         {
