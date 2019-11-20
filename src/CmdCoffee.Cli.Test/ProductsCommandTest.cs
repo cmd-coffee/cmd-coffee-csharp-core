@@ -1,4 +1,3 @@
-using CmdCoffee.Cli;
 using FluentAssertions;
 using Xunit;
 
@@ -11,5 +10,8 @@ namespace CmdCoffee.Cli.Test
         {
             (new ProductsCommand() as ICoffeeCommand).Should().NotBeNull();
         }
+
+        [Fact]
+        public void Execute_NoParams_
     }
 }

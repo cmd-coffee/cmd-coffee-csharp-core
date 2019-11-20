@@ -7,16 +7,27 @@ namespace CmdCoffee.Cli
 
     public class ProductsCommand : ICoffeeCommand
     {
+        private readonly ITableGenerator _tableGenerator;
+        private readonly ICmdCoffeeApi _cmdCoffeeApi;
         public string Name => "products";
         public string Description => "list available coffees for order";
-        public string Params => string.Empty;
+
+        public ProductsCommand() : this(new TableGenerator(), new CmdCoffeeApi())
+        { }
+
+        public ProductsCommand(ITableGenerator tableGenerator, ICmdCoffeeApi cmdCoffeeApi)
+        {
+            _tableGenerator = tableGenerator;
+            _cmdCoffeeApi = cmdCoffeeApi;
+        }
 
         public void Execute()
         {
-            var result = CmdCoffeeApi.GetProducts().Result as IEnumerable<dynamic>;
-            var output = result.ToStringTable(
-                new[] { "Code", "Name", "Price USD", "Weight in Ounces" },
+            var result = _cmdCoffeeApi.GetProducts().Result as IEnumerable<dynamic>;
+
+            var output = _tableGenerator.Generate(result, new[] { "Code", "Name", "Price USD", "Weight in Ounces" },
                 p => p.code, p => p.name, p => p.priceUsd, p => p.weightInOunces);
+
             System.Console.WriteLine(output);
 
             var directions = "enter 'code' for details or 'b' to go back";
@@ -36,6 +47,7 @@ namespace CmdCoffee.Cli
                     foreach (string key in product.Keys)
                         System.Console.WriteLine($"{key}:\t{product[key]}");
                 }
+
                 System.Console.WriteLine();
                 System.Console.WriteLine(directions);
                 input = System.Console.ReadLine();

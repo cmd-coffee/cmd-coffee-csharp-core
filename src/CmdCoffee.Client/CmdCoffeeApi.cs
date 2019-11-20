@@ -4,11 +4,16 @@ using Flurl.Http;
 
 namespace CmdCoffee.Client
 {
-    public class CmdCoffeeApi
+    public interface ICmdCoffeeApi
+    {
+        Task<object> GetProducts();
+    }
+
+    public class CmdCoffeeApi : ICmdCoffeeApi
     {
         private const string CmdCoffeeApiAddress = "http://api.cmd.coffee";
 
-        public static async Task<dynamic> GetProducts()
+        public async Task<dynamic> GetProducts()
         {
             return await CmdCoffeeApiAddress.AppendPathSegment("products").GetJsonListAsync();
         }
