@@ -1,40 +1,56 @@
-﻿namespace CmdCoffee.Cli
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace CmdCoffee.Cli
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             var enterSelection = "Please enter selection. Type 'help' for options; 'q' to quit.";
 
-            System.Console.WriteLine("Welcome to cmd.coffee.");
-            System.Console.WriteLine(enterSelection);
+            Console.WriteLine("Welcome to cmd.coffee.");
+            Console.WriteLine(enterSelection);
             var commandMapper = new CommandMapper(new ProductsCommand());
 
-            var input = System.Console.ReadLine();
+            void GetInput()
+            {
+                do
+                {
+                    var input = System.Console.ReadLine();
+                    args = input?.Split(" ");
+                } while (args?.Length < 1);
+
+            }
+
+            if (args?.Length < 1) 
+                GetInput();
 
             var commands = commandMapper.Commands;
-            while (input != "q")
+
+            while (args[0] != "q")
             {
-                if (input == "help")
+                string output = "";
+                var command = args[0];
+
+                if (command == "help")
                 {
-                    foreach (string key in commands.Keys)
-                    {
-                        var command = commands[key];
-                        System.Console.WriteLine($"\n'{key}': {command.Description}\n");
-                    }
+                    output = new OutputGenerator().GenerateTable(commands, new[] {"Command", "Description"},
+                        kvp => $"{kvp.Value.Name} {kvp.Value.Parameters}", kvp => kvp.Value.Description);
                 }
 
-                else if (!string.IsNullOrEmpty(input))
+                else if (!string.IsNullOrEmpty(command))
                 {
-                    if (commands.ContainsKey(input))
-                        commands[input]?.Execute();
-                    else
-                    {
-                        System.Console.WriteLine($"No command found: {input}");
-                    }
+                    output = commands.ContainsKey(command) ? commands[command]?.Execute(args.Skip(1).Take(args.Length-1)) 
+                        : $"No command found: {command}";
                 }
-                System.Console.WriteLine(enterSelection);
-                input = System.Console.ReadLine();
+
+                Console.WriteLine(output);
+
+                Console.WriteLine(enterSelection);
+
+                GetInput();
             }
         }
     }

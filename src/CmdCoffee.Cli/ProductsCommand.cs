@@ -7,51 +7,44 @@ namespace CmdCoffee.Cli
 
     public class ProductsCommand : ICoffeeCommand
     {
-        private readonly ITableGenerator _tableGenerator;
+        private readonly IOutputGenerator _outputGenerator;
         private readonly ICmdCoffeeApi _cmdCoffeeApi;
         public string Name => "products";
-        public string Description => "list available coffees for order";
+        public string Description => "list available coffees for order. specify product-code to see additional details";
+        public string Parameters => "[product-code]";
 
-        public ProductsCommand() : this(new TableGenerator(), new CmdCoffeeApi())
+        public ProductsCommand() : this(new OutputGenerator(), new CmdCoffeeApi())
         { }
 
-        public ProductsCommand(ITableGenerator tableGenerator, ICmdCoffeeApi cmdCoffeeApi)
+        public ProductsCommand(IOutputGenerator outputGenerator, ICmdCoffeeApi cmdCoffeeApi)
         {
-            _tableGenerator = tableGenerator;
+            _outputGenerator = outputGenerator;
             _cmdCoffeeApi = cmdCoffeeApi;
         }
 
-        public void Execute()
+        public string Execute(IEnumerable<string> args)
         {
-            var result = _cmdCoffeeApi.GetProducts().Result as IEnumerable<dynamic>;
+            string output;
 
-            var output = _tableGenerator.Generate(result, new[] { "Code", "Name", "Price USD", "Weight in Ounces" },
-                p => p.code, p => p.name, p => p.priceUsd, p => p.weightInOunces);
-
-            System.Console.WriteLine(output);
-
-            var directions = "enter 'code' for details or 'b' to go back";
-            System.Console.WriteLine(directions);
-
-            var input = System.Console.ReadLine();
-
-            while (input != "b")
+            if (args == null || !args.Any())
             {
-                var product = (IDictionary<string, object>)result.FirstOrDefault(p => p.code == input.ToUpper());
+                var result = _cmdCoffeeApi.GetProducts().Result as IEnumerable<dynamic>;
 
-                if (product == null)
-                    System.Console.WriteLine($"no product found: {input}");
-
-                else
-                {
-                    foreach (string key in product.Keys)
-                        System.Console.WriteLine($"{key}:\t{product[key]}");
-                }
-
-                System.Console.WriteLine();
-                System.Console.WriteLine(directions);
-                input = System.Console.ReadLine();
+                output = _outputGenerator.GenerateTable(result, new[] { "code", "name", "price usd", "weight (oz)" },
+                    p => p.code, p => p.name, p => p.priceUsd, p => p.weightInOunces);
             }
+            else
+            {
+                var productCode = args.FirstOrDefault();
+
+                var result = _cmdCoffeeApi.GetProducts().Result as IEnumerable<dynamic>;
+
+                var product = result?.FirstOrDefault(p => p.code == productCode?.ToUpper());
+
+                output = product != null ? (string) _outputGenerator.GeneratePairs(product) : $"no product found: {productCode}";
+            }
+
+            return output;
         }
     }
 }

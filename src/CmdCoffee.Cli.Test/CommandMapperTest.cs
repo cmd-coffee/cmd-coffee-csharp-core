@@ -45,5 +45,11 @@ namespace CmdCoffee.Cli.Test
 
             commandsList["third"].Description.Should().Be("does some fun stuff");
         }
+
+        [Fact]
+        public void CommandList_CommandsExist_ReturnsNameDescriptionPairs()
+        {
+
+        }
     }
 }
