@@ -37,13 +37,13 @@ namespace CmdCoffee.Cli.Test
             };
 
             _coffeeCommander = new CoffeeCommander(_mockOutputGenerator.Object, _coffeeCommands);
-
         }
 
         [Fact]
         public void CommandsList_CommandsNull_ReturnsEmptyDictionary()
         {
-            var commander = new CoffeeCommander(_mockOutputGenerator.Object, (IDictionary<string, ICoffeeCommand>)null);
+            var commander =
+                new CoffeeCommander(_mockOutputGenerator.Object, (IDictionary<string, ICoffeeCommand>) null);
             commander.CoffeeCommands.Should().BeEmpty();
         }
 
@@ -102,7 +102,6 @@ namespace CmdCoffee.Cli.Test
         [Fact]
         public void Help_CommandHasNoParameter_OnlyNameInOutput()
         {
-
             VerifyGenerateTable((commands, headers, valueSelectors) =>
             {
                 var commandOutputSelector = valueSelectors[0];
@@ -126,15 +125,40 @@ namespace CmdCoffee.Cli.Test
             var result = _coffeeCommander.Help;
         }
 
-        private void VerifyGenerateTable(Action<IEnumerable<KeyValuePair<string, ICoffeeCommand>>, string[], Func<KeyValuePair<string, ICoffeeCommand>, object>[]> verifyParams)
+        [Fact]
+        public void Execute_CommandDoesNotExist_ReturnsMessage()
+        {
+            _coffeeCommander.Execute(new[] {"not-a-command"}).Should().Be("No command found: not-a-command");
+        }
+
+        [Fact]
+        public void Execute_CommandExistsNoAdditionalArgs_CallsExecuteWithEmptyArgs()
+        {
+            _mockCoffeeCommand.Setup(cc => cc.Execute(It.Is<IEnumerable<string>>(args => !args.Any())))
+                .Returns("did some stuff");
+
+            _coffeeCommander.Execute(new[] {"first"}).Should().Be("did some stuff");
+        }
+
+        [Fact]
+        public void Execute_CommandExistsWithAdditionalArgs_CallsExecuteWithOtherArgs()
+        {
+            _mockCoffeeCommand2.Setup(cc => cc.Execute
+                    (It.Is<IEnumerable<string>>(args => args.Count(a => a == "arg2") == 1)))
+                .Returns("did some other stuff");
+
+            _coffeeCommander.Execute(new[] {"second", "arg2"}).Should().Be("did some other stuff");
+        }
+
+        private void VerifyGenerateTable(
+            Action<IEnumerable<KeyValuePair<string, ICoffeeCommand>>, string[],
+                Func<KeyValuePair<string, ICoffeeCommand>, object>[]> verifyParams)
         {
             _mockOutputGenerator.Setup(og => og.GenerateTable(
                     It.IsAny<IEnumerable<KeyValuePair<string, ICoffeeCommand>>>(),
                     It.IsAny<string[]>(),
                     It.IsAny<Func<KeyValuePair<string, ICoffeeCommand>, object>[]>()))
-                .Callback<IEnumerable<KeyValuePair<string, ICoffeeCommand>>, string[],
-                        Func<KeyValuePair<string, ICoffeeCommand>, object>[]>
-                    (verifyParams);
+                .Callback(verifyParams);
         }
     }
 }

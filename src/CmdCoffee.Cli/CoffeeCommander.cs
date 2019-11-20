@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CmdCoffee.Cli
 {
@@ -38,6 +39,13 @@ namespace CmdCoffee.Cli
                 kvp=> $"{kvp.Value.Name} {kvp.Value.Parameters}", kvp=> kvp.Value.Description);
 
             }
+        }
+
+        public string Execute(string[] args)
+        {
+            var command = args[0];
+            return CoffeeCommands.ContainsKey(command) ? CoffeeCommands[command]?.Execute(args.Skip(1).Take(args.Length - 1))
+                : $"No command found: {command}";
         }
     }
 }
