@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CmdCoffee.Console\CmdCoffee.Console.csproj" />
+    <ProjectReference Include="..\CmdCoffee.Cli\CmdCoffee.Cli.csproj" />
   </ItemGroup>
 
 </Project>

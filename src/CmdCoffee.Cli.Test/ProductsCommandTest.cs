@@ -1,7 +1,7 @@
 using FluentAssertions;
 using Xunit;
 
-namespace CmdCoffee.Console.Test
+namespace CmdCoffee.Cli.Test
 {
     public class ProductsCommandTest
     {
@@ -10,5 +10,7 @@ namespace CmdCoffee.Console.Test
         {
             (new ProductsCommand() as ICoffeeCommand).Should().NotBeNull();
         }
+
+     
     }
 }

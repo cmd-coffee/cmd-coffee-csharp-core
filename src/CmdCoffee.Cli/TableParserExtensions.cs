@@ -6,8 +6,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace CmdCoffee.Console
+namespace CmdCoffee.Cli
 {
+
+    //original source: https://github.com/Robert-McGinley/TableParser
     public static class TableParserExtensions
     {
         public static string ToStringTable<T>(this IEnumerable<T> values, string[] columnHeaders,
