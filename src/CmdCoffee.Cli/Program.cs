@@ -27,8 +27,7 @@ namespace CmdCoffee.Cli
 
                 else if (!string.IsNullOrEmpty(command))
                 {
-                    output = commands.ContainsKey(command) ? commands[command]?.Execute(args.Skip(1).Take(args.Length-1)) 
-                        : $"No command found: {command}";
+                    output = commander.Execute(args);
                 }
 
                 Console.WriteLine(output);
