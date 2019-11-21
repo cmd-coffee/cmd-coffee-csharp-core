@@ -13,8 +13,6 @@ namespace CmdCoffee.Cli
             if (NeedInput()) 
                 GetInput();
 
-            var commands = commander.CoffeeCommands;
-
             while (args[0] != "q")
             {
                 var output = "";
@@ -47,7 +45,7 @@ namespace CmdCoffee.Cli
                 do
                 {
                     Console.WriteLine(enterSelection);
-                    var input = System.Console.ReadLine();
+                    var input = Console.ReadLine();
                     args = input?.Split(" ");
                 } while (NeedInput());
             }
