@@ -23,6 +23,8 @@ namespace CmdCoffee.Cli
             // add services
             serviceCollection.AddTransient<ICoffeeCommand, ProductsCommand>();
             serviceCollection.AddTransient<IOutputGenerator, OutputGenerator>();
+            serviceCollection.AddTransient<IOutputWriter, ConsoleWrapper>();
+            serviceCollection.AddTransient<IInputReader, ConsoleWrapper>();
 
             serviceCollection.AddTransient<CoffeeCommander>();
 

@@ -1,19 +1,21 @@
-﻿using System;
-
-namespace CmdCoffee.Cli
+﻿namespace CmdCoffee.Cli
 {
     public class App
     {
         private readonly CoffeeCommander _coffeeCommander;
+        private readonly IOutputWriter _outputWriter;
+        private readonly IInputReader _inputReader;
 
-        public App(CoffeeCommander coffeeCommander)
+        public App(CoffeeCommander coffeeCommander, IOutputWriter outputWriter, IInputReader inputReader)
         {
             _coffeeCommander = coffeeCommander;
+            _outputWriter = outputWriter;
+            _inputReader = inputReader;
         }
 
         public void Run(string[] args)
         {
-            Console.WriteLine("Welcome to cmd.coffee.");
+            _outputWriter.WriteLine("Welcome to cmd.coffee.");
 
             if (NeedInput())
                 GetInput();
@@ -33,7 +35,7 @@ namespace CmdCoffee.Cli
                     output = _coffeeCommander.Execute(args);
                 }
 
-                Console.WriteLine(output);
+                _outputWriter.WriteLine(output);
 
                 GetInput();
             }
@@ -49,8 +51,8 @@ namespace CmdCoffee.Cli
 
                 do
                 {
-                    Console.WriteLine(enterSelection);
-                    var input = Console.ReadLine();
+                    _outputWriter.WriteLine(enterSelection);
+                    var input = _inputReader.ReadLine();
                     args = input?.Split(" ");
                 } while (NeedInput());
             }
