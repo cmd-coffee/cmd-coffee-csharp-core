@@ -8,7 +8,7 @@ namespace CmdCoffee.Cli.Test
         [Fact]
         public void ImplementsICoffeeCommand()
         {
-            (new ProductsCommand() as ICoffeeCommand).Should().NotBeNull();
+            (new ProductsCommand(null, null) as ICoffeeCommand).Should().NotBeNull();
         }
 
      

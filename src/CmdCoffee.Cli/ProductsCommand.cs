@@ -13,9 +13,6 @@ namespace CmdCoffee.Cli
         public string Description => "list available coffees for order. specify product-code to see additional details";
         public string Parameters => "[product-code]";
 
-        public ProductsCommand() : this(new OutputGenerator(), new CmdCoffeeApi())
-        { }
-
         public ProductsCommand(IOutputGenerator outputGenerator, ICmdCoffeeApi cmdCoffeeApi)
         {
             _outputGenerator = outputGenerator;
