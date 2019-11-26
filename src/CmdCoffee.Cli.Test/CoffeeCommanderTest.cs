@@ -50,7 +50,7 @@ namespace CmdCoffee.Cli.Test
         [Fact]
         public void CommandsList_NoCommands_ReturnsEmptyDictionary()
         {
-            var commandMapper = new CoffeeCommander(_mockOutputGenerator.Object);
+            var commandMapper = new CoffeeCommander(_mockOutputGenerator.Object, new List<ICoffeeCommand>());
             commandMapper.CoffeeCommands.Should().BeEmpty();
         }
 

@@ -1,54 +1,37 @@
-﻿using System;
+﻿using CmdCoffee.Client;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CmdCoffee.Cli
 {
     class Program
-    {
-        static void Main(string[] args)
+    { 
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to cmd.coffee.");
-            var commander = new CoffeeCommander(new OutputGenerator(), new ProductsCommand());
+            // create service collection
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
 
-            if (NeedInput()) 
-                GetInput();
+            // create service provider
+            var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            while (args[0] != "q")
-            {
-                var output = "";
-                var command = args[0];
-
-                if (command == "help")
-                {
-                    output = commander.Help;
-                }
-
-                else if (!string.IsNullOrEmpty(command))
-                {
-                    output = commander.Execute(args);
-                }
-
-                Console.WriteLine(output);
-
-                GetInput();
-            }
-
-            bool NeedInput()
-            {
-                return args?.Length < 1;
-            }
-
-            void GetInput()
-            {
-                const string enterSelection = "Please enter selection. Type 'help' for options; 'q' to quit.";
-
-                do
-                {
-                    Console.WriteLine(enterSelection);
-                    var input = Console.ReadLine();
-                    args = input?.Split(" ");
-                } while (NeedInput());
-            }
+            // entry to run app
+            serviceProvider.GetService<App>().Run(args);
         }
+
+        private static void ConfigureServices(IServiceCollection serviceCollection)
+        {
+            // add services
+            serviceCollection.AddTransient<ICoffeeCommand, ProductsCommand>();
+            serviceCollection.AddTransient<IOutputGenerator, OutputGenerator>();
+
+            serviceCollection.AddTransient<CoffeeCommander>();
+
+            serviceCollection.AddTransient<ICmdCoffeeApi, CmdCoffeeApi>();
+
+            // add app
+            serviceCollection.AddTransient<App>();
+        }
+
     }
 
  }

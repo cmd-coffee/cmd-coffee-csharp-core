@@ -7,7 +7,7 @@ namespace CmdCoffee.Cli
     {
         private readonly IOutputGenerator _outputGenerator;
 
-        public CoffeeCommander(IOutputGenerator outputGenerator, params ICoffeeCommand[] coffeeCommandsList) 
+        public CoffeeCommander(IOutputGenerator outputGenerator, IEnumerable<ICoffeeCommand> coffeeCommandsList) 
         {
             _outputGenerator = outputGenerator;
             var coffeeCommands = new Dictionary<string, ICoffeeCommand>();
