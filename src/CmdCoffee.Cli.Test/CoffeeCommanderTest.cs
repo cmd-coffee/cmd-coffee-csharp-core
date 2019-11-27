@@ -134,7 +134,7 @@ namespace CmdCoffee.Cli.Test
         [Fact]
         public void Execute_CommandExistsNoAdditionalArgs_CallsExecuteWithEmptyArgs()
         {
-            _mockCoffeeCommand.Setup(cc => cc.Execute(It.Is<IEnumerable<string>>(args => !args.Any())))
+            _mockCoffeeCommand.Setup(cc => cc.Execute(It.Is<IList<string>>(args => !args.Any())))
                 .Returns("did some stuff");
 
             _coffeeCommander.Execute(new[] {"first"}).Should().Be("did some stuff");
@@ -144,7 +144,7 @@ namespace CmdCoffee.Cli.Test
         public void Execute_CommandExistsWithAdditionalArgs_CallsExecuteWithOtherArgs()
         {
             _mockCoffeeCommand2.Setup(cc => cc.Execute
-                    (It.Is<IEnumerable<string>>(args => args.Count(a => a == "arg2") == 1)))
+                    (It.Is<IList<string>>(args => args.Count(a => a == "arg2") == 1)))
                 .Returns("did some other stuff");
 
             _coffeeCommander.Execute(new[] {"second", "arg2"}).Should().Be("did some other stuff");
