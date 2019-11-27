@@ -1,0 +1,17 @@
+﻿{
+  "Configuration": {
+    "CmdCoffeeApiAddress": "http://api.cmd.coffee",
+    "AccessKey": "WM7PY0bHk/4UIAyu6PNfv7gWP1Vg/aiZ8fHQns31I+1VXA=",
+    "ShippingAddress": {
+      "name": "Coffee Drinker",
+      "company": "cmd.coffee (optional)",
+      "address1": "123 Caffeine Way",
+      "address2": "Apt 2a",
+      "city": "Beanville",
+      "state": "ND",
+      "zip": "01923",
+      "phone": "optional",
+      "email": "optional"
+    }
+  }
+}

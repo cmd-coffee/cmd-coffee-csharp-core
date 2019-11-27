@@ -44,7 +44,7 @@ namespace CmdCoffee.Cli
         public string Execute(string[] args)
         {
             var command = args[0];
-            return CoffeeCommands.ContainsKey(command) ? CoffeeCommands[command]?.Execute(args.Skip(1).Take(args.Length - 1))
+            return CoffeeCommands.ContainsKey(command) ? CoffeeCommands[command]?.Execute(args.Skip(1).Take(args.Length - 1).ToArray())
                 : $"No command found: {command}";
         }
     }

@@ -24,7 +24,7 @@ namespace CmdCoffee.Cli.Test
         [Fact]
         public void GeneratePairs_NullDictionary_IsBlank()
         {
-            var result = _outputGenerator.GeneratePairs(null, "should not be used");
+            var result = _outputGenerator.GeneratePairs<object>(null, "should not be used");
             result.Should().Be(string.Empty);
         }
 
@@ -33,6 +33,13 @@ namespace CmdCoffee.Cli.Test
         {
             var result = _outputGenerator.GeneratePairs(new Dictionary<string, object> {{"one","value"}}, "should be used");
             result.IndexOf("\nshould be used:").Should().Be(0);
+        }
+
+        [Fact]
+        public void GeneratePairs_NoTitle_HasNoTitleLine()
+        {
+            var result = _outputGenerator.GeneratePairs(new Dictionary<string, object> { { "one", "value" } });
+            result.IndexOf("\n:").Should().Be(-1);
         }
 
         [Fact]

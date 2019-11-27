@@ -4,7 +4,6 @@ using CmdCoffee.Client;
 
 namespace CmdCoffee.Cli
 {
-
     public class ProductsCommand : ICoffeeCommand
     {
         private readonly IOutputGenerator _outputGenerator;
@@ -19,7 +18,7 @@ namespace CmdCoffee.Cli
             _cmdCoffeeApi = cmdCoffeeApi;
         }
 
-        public string Execute(IEnumerable<string> args)
+        public string Execute(IList<string> args)
         {
             string output;
 
@@ -27,7 +26,7 @@ namespace CmdCoffee.Cli
             {
                 var result = _cmdCoffeeApi.GetProducts().Result as IEnumerable<dynamic>;
 
-                output = _outputGenerator.GenerateTable(result, new[] { "code", "name", "price usd", "weight (oz)" },
+                output = _outputGenerator.GenerateTable(result, new[] {"code", "name", "price usd", "weight (oz)"},
                     p => p.code, p => p.name, p => p.priceUsd, p => p.weightInOunces);
             }
             else
@@ -38,7 +37,8 @@ namespace CmdCoffee.Cli
 
                 var product = result?.FirstOrDefault(p => p.code == productCode?.ToUpper());
 
-                output = product != null ? (string) _outputGenerator.GeneratePairs(product, "Product Details") 
+                output = product != null
+                    ? (string) _outputGenerator.GeneratePairs(product, "Product Details")
                     : $"no product found: {productCode}";
             }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace CmdCoffee.Cli
 {
@@ -9,7 +10,7 @@ namespace CmdCoffee.Cli
         string GenerateTable<T>(IEnumerable<T> source, string[] headers,
             params Func<T, object>[] valueSelectors);
   
-        string GeneratePairs(IDictionary<string, object> source, string title = default);
+        string GeneratePairs<T>(IEnumerable<KeyValuePair<string, T>> source, string title = default);
     }
 
     public class OutputGenerator : IOutputGenerator
@@ -20,14 +21,18 @@ namespace CmdCoffee.Cli
             return source.ToStringTable(headers, valueSelectors);
         }
 
-        public string GeneratePairs(IDictionary<string, object> source, string title = default)
+
+        public string GeneratePairs<T>(IEnumerable<KeyValuePair<string, T>> source, string title = default)
         {
-            if (source == null || source.Count < 1)
+            if (source == null || source.Count() < 1)
                 return string.Empty;
 
-            var output = $"\n{title}:\n";
+            var output = "\n";
 
-            var maxKeyLength = source.Keys.Max(s => s.Length) + 2;
+            if (!string.IsNullOrEmpty(title))
+                output += $"{title}:\n";
+
+            var maxKeyLength = source.Max(s => s.Key.Length) + 2;
 
             foreach (var kvp in source)
             {

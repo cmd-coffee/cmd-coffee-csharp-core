@@ -1,21 +1,59 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
 
 namespace CmdCoffee.Client
 {
+
     public interface ICmdCoffeeApi
     {
-        Task<object> GetProducts();
+        Task<dynamic> GetProducts();
+        Task<string> PostOrder(string productCode, dynamic address, string promoCode);
+    }
+
+    public interface ICmdCoffeeApiSettings
+    {
+        string CmdCoffeeApiAddress { get;}
+        string AccessKey { get; }
     }
 
     public class CmdCoffeeApi : ICmdCoffeeApi
     {
-        private const string CmdCoffeeApiAddress = "http://api.cmd.coffee";
+        private readonly ICmdCoffeeApiSettings _apiSettings;
+
+        public CmdCoffeeApi(Func<ICmdCoffeeApiSettings> apiSettingsFactory)
+        {
+            _apiSettings = apiSettingsFactory();
+        }
 
         public async Task<dynamic> GetProducts()
         {
-            return await CmdCoffeeApiAddress.AppendPathSegment("products").GetJsonListAsync();
+            return await GetBaseRequest("products").GetJsonListAsync();
+        }
+
+        public async Task<string> PostOrder(string productCode, dynamic address, string promoCode)
+        {
+
+            var httpResponseMessage = await GetBaseRequest("orders")
+                .PostJsonAsync(new {productCode = productCode, shippingAddress = address, promoCode = promoCode});
+
+            var result = httpResponseMessage.Content.ReadAsStringAsync().Result;
+
+            if (!httpResponseMessage.IsSuccessStatusCode)
+            {
+                throw new Exception(result);
+            }
+
+            return result;
+
+        }
+
+        private IFlurlRequest GetBaseRequest(string endpoint)
+        {
+            return _apiSettings.CmdCoffeeApiAddress.AppendPathSegment(endpoint)
+                .WithHeader("X-Access-Key", _apiSettings.AccessKey)
+                .AllowAnyHttpStatus();
         }
     }
 }
