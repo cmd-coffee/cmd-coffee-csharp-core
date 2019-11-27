@@ -5,19 +5,6 @@ using Flurl.Http;
 
 namespace CmdCoffee.Client
 {
-
-    public interface ICmdCoffeeApi
-    {
-        Task<dynamic> GetProducts();
-        Task<string> PostOrder(string productCode, dynamic address, string promoCode);
-    }
-
-    public interface ICmdCoffeeApiSettings
-    {
-        string CmdCoffeeApiAddress { get;}
-        string AccessKey { get; }
-    }
-
     public class CmdCoffeeApi : ICmdCoffeeApi
     {
         private readonly ICmdCoffeeApiSettings _apiSettings;
