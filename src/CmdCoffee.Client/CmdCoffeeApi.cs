@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
+using Newtonsoft.Json.Linq;
 
 namespace CmdCoffee.Client
 {
@@ -19,7 +20,7 @@ namespace CmdCoffee.Client
             return await GetBaseRequest("products").GetJsonListAsync();
         }
 
-        public async Task<string> PostOrder(string productCode, dynamic address, string promoCode)
+        public async Task<dynamic> PostOrder(string productCode, dynamic address, string promoCode)
         {
 
             var httpResponseMessage = await GetBaseRequest("orders")
@@ -32,7 +33,7 @@ namespace CmdCoffee.Client
                 throw new Exception(result);
             }
 
-            return result;
+            return JObject.Parse(result);
 
         }
 

@@ -7,5 +7,7 @@ namespace CmdCoffee.Cli
         public string CmdCoffeeApiAddress { get; set; }
         public string AccessKey { get; set; }
         public ShippingAddress ShippingAddress { get; set; }
+
+        public string ContactEmail => "support@cmd.coffee";
     }
 }
