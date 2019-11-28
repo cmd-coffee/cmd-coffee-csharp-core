@@ -2,6 +2,6 @@
 {
     public interface IOutputWriter
     {
-        void WriteLine(string output);
+        void WriteLine(string output = default);
     }
 }

@@ -10,7 +10,7 @@ namespace CmdCoffee.Cli
             return Console.ReadLine();
         }
 
-        public void WriteLine(string output)
+        public void WriteLine(string output = default)
         {
             Console.WriteLine(output);
         }

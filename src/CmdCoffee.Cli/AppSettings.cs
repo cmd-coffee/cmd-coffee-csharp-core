@@ -9,5 +9,6 @@ namespace CmdCoffee.Cli
         public ShippingAddress ShippingAddress { get; set; }
 
         public string ContactEmail => "support@cmd.coffee";
+        public string PayPalAddress => "https://www.paypal.me/cmdcoffee/";
     }
 }

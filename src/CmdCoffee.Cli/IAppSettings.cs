@@ -4,5 +4,6 @@
     {
         ShippingAddress ShippingAddress { get; set; }
         string ContactEmail { get; }
+        string PayPalAddress { get; }
     }
 }

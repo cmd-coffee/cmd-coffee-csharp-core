@@ -17,7 +17,7 @@ namespace CmdCoffee.Cli
         public string Parameters => "product-code [promo-code]";
         public string Description => "place an order for one of our products";
 
-        public BuyCommand(ICmdCoffeeApi cmdCoffeeApi, Func<IAppSettings> appSettingsFactory, 
+        public BuyCommand(ICmdCoffeeApi cmdCoffeeApi, Func<IAppSettings> appSettingsFactory,
             IOutputWriter writer, IInputReader reader, IOutputGenerator outputGenerator)
         {
             _cmdCoffeeApi = cmdCoffeeApi;
@@ -47,31 +47,48 @@ namespace CmdCoffee.Cli
 
                 var result = _cmdCoffeeApi.PostOrder(productCode, _appSettings.ShippingAddress, promoCode).Result;
 
-                _writer.WriteLine($"Your order has been accepted: orderKey: {result.orderDetails.orderKey}");
-                
-                _writer.WriteLine($"\nPlease confirm the shipping address: " +
-                                  $"{_outputGenerator.GeneratePairs((IEnumerable<KeyValuePair<string,JToken>>)result.orderDetails.shippingAddress)}");
+                var order = result.orderDetails;
 
-                _writer.WriteLine("Is it correct? (y/n)");
+                _writer.WriteLine(_outputGenerator.GeneratePairs(new Dictionary<string, object>
+                {
+                    {"product", order.productName},
+                    {"sub-total", order.subTotal},
+                    {"discount", order.discount},
+                    {"total", order.total}
+                }, "Please confirm order details"));
+
+                _writer.WriteLine(
+                    $"{_outputGenerator.GeneratePairs((IEnumerable<KeyValuePair<string, JToken>>) order.shippingAddress, "shipping address")}");
+
+                _writer.WriteLine("Is this correct? (y/n)");
                 if (_reader.ReadLine().ToLower() != "y")
                 {
-                    return "If your address is not correct, please update your address in app-settings.json and try again.";
+                    return
+                        "If your address is not correct, please update your address in app-settings.json and try again.";
                 }
-                    
+
                 _writer.WriteLine($"Check out our return policy: {result.returnPolicy}");
                 _writer.WriteLine("Does that work for you? (y/n)");
                 if (_reader.ReadLine().ToLower() != "y")
                 {
-                    return $"Bummer. Feel free to shoot us an email to {_appSettings.ContactEmail} to share your concerns.";
+                    return
+                        $"Bummer. Feel free to shoot us an email to {_appSettings.ContactEmail} to share your concerns.";
                 }
 
-                _writer.WriteLine($"Here are your payment options: {result.paymentOptions}");
-
-                _writer.WriteLine($"We'll get started on your order as soon as we receive payment.");
+                _writer.WriteLine($"\nWe'll get started on your order as soon as we receive payment.");
                 _writer.WriteLine($"Payment will be accepted until {result.paymentExpiration}");
+                _writer.WriteLine("Press any key to see payment methods");
+                _reader.ReadLine();
+
+                _writer.WriteLine($"Send cryptocurrency payment to one of these addresses: {result.paymentOptions}");
+
+                _writer.WriteLine($"or use this link {_appSettings.PayPalAddress}{order.total}USD");
+                _writer.WriteLine($"Include your order key ({order.orderKey}) in the payment notes.");
+
+                _writer.WriteLine("Press any key to return to main menu");
+                _reader.ReadLine();
 
                 return string.Empty;
-
             }
             catch (Exception ex)
             {
