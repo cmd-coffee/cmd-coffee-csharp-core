@@ -72,6 +72,7 @@ namespace CmdCoffee.Cli
         {
             serviceCollection.AddTransient<ICoffeeCommand, ProductsCommand>();
             serviceCollection.AddTransient<ICoffeeCommand, OrderCommand>();
+            serviceCollection.AddTransient<ICoffeeCommand, OrdersCommand>();
             serviceCollection.AddTransient<CoffeeCommander>();
         }
     }

@@ -20,6 +20,16 @@ namespace CmdCoffee.Client
             return await GetBaseRequest("products").GetJsonListAsync();
         }
 
+        public async Task<dynamic> GetOrders()
+        {
+            return await GetBaseRequest("orders").GetJsonListAsync();
+        }
+
+        public async Task<dynamic> GetOrder(string orderKey)
+        {
+            return await GetBaseRequest($"orders/{orderKey}").GetJsonAsync();
+       }
+
         public async Task<dynamic> PostOrder(string productCode, dynamic address, string promoCode)
         {
 
