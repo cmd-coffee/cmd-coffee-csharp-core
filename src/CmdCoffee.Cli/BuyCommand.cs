@@ -6,18 +6,18 @@ using Newtonsoft.Json.Linq;
 
 namespace CmdCoffee.Cli
 {
-    public class OrderCommand : ICoffeeCommand
+    public class BuyCommand : ICoffeeCommand
     {
         private readonly ICmdCoffeeApi _cmdCoffeeApi;
         private readonly IOutputWriter _writer;
         private readonly IInputReader _reader;
         private readonly IOutputGenerator _outputGenerator;
         private readonly IAppSettings _appSettings;
-        public string Name => "order";
+        public string Name => "buy";
         public string Parameters => "product-code [promo-code]";
-        public string Description => "order 'product-code'";
+        public string Description => "place an order for one of our products";
 
-        public OrderCommand(ICmdCoffeeApi cmdCoffeeApi, Func<IAppSettings> appSettingsFactory, 
+        public BuyCommand(ICmdCoffeeApi cmdCoffeeApi, Func<IAppSettings> appSettingsFactory, 
             IOutputWriter writer, IInputReader reader, IOutputGenerator outputGenerator)
         {
             _cmdCoffeeApi = cmdCoffeeApi;
@@ -62,7 +62,7 @@ namespace CmdCoffee.Cli
                 _writer.WriteLine("Does that work for you? (y/n)");
                 if (_reader.ReadLine().ToLower() != "y")
                 {
-                    return $"Bummer. Feel free to shoot us an email to {_appSettings.ShippingAddress} to share your concerns.";
+                    return $"Bummer. Feel free to shoot us an email to {_appSettings.ContactEmail} to share your concerns.";
                 }
 
                 _writer.WriteLine($"Here are your payment options: {result.paymentOptions}");
