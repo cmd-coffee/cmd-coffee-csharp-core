@@ -6,6 +6,7 @@ namespace CmdCoffee.Cli
     {
         public string ReadLine()
         {
+            Console.Write("cmd.coffee> ");
             return Console.ReadLine();
         }
 

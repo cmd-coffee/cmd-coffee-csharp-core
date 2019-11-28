@@ -68,7 +68,7 @@ namespace CmdCoffee.Cli
                 _writer.WriteLine($"Here are your payment options: {result.paymentOptions}");
 
                 _writer.WriteLine($"We'll get started on your order as soon as we receive payment.");
-                _writer.WriteLine($"Make sure you get it in before this order expires at {result.paymentExpiration}");
+                _writer.WriteLine($"Payment will be accepted until {result.paymentExpiration}");
 
                 return string.Empty;
 
