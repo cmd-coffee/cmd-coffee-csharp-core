@@ -55,14 +55,21 @@ namespace CmdCoffee.Cli
                 return;
             }
 
-            _outputWriter.WriteLine($"\n{result.welcomeMessage}");
-
-            _outputWriter.WriteLine($"access-key: {result.accessKey}");
-
-            _outputWriter.WriteLine("\nTo use your accessKey, update your app-settings.json file");
-            _outputWriter.WriteLine("Update your shipping address while you're at it!");
-
+            _outputWriter.WriteLine("\nGreat. Let's update your app-settings.json file");
+            _outputWriter.WriteLine($"You can find it here: {appSettings.SettingsFile}");
             _outputWriter.AwaitAnyKey();
+
+            _outputWriter.WriteLine("Under 'Configuration' add this:");
+            _outputWriter.WriteLine($"\"AccessKey\": \"{result.accessKey}\"");
+            _outputWriter.AwaitAnyKey();
+
+            _outputWriter.WriteLine("Update your \"ShippingAddress\".");
+            _outputWriter.AwaitAnyKey();
+
+            _outputWriter.WriteLine("Save the file.");
+            _outputWriter.AwaitAnyKey();
+
+            _outputWriter.WriteLine("You're good to go! Restart to use new settings.");
         }
 
     }

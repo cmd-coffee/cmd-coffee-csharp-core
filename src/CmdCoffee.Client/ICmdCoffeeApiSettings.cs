@@ -4,5 +4,6 @@
     {
         string CmdCoffeeApiAddress { get;}
         string AccessKey { get; }
+        string SettingsFile { get; }
     }
 }
