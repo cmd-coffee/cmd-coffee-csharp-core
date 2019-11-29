@@ -94,7 +94,7 @@ namespace CmdCoffee.Cli
             }
             catch (Exception ex)
             {
-                _writer.WriteError(ex.Message);
+                _writer.WriteError(ex);
             }
         }
     }

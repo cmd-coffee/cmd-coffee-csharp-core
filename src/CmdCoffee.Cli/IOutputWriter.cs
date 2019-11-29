@@ -1,4 +1,6 @@
-﻿namespace CmdCoffee.Cli
+﻿using System;
+
+namespace CmdCoffee.Cli
 {
     public interface IOutputWriter
     {
@@ -7,6 +9,8 @@
         void AwaitAnyKey(string message = default);
 
         void WriteError(string errorMessage);
+
+        void WriteError(Exception ex);
 
         bool AskYesNo(string question);
     }

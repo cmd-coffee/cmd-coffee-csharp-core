@@ -20,7 +20,10 @@ namespace CmdCoffee.Cli
             _outputWriter.WriteLine("Welcome to cmd.coffee.");
 
             if (NeedInput())
+            {
+                _outputWriter.WriteLine("Please enter selection. Type 'help' for options; 'q' to quit.");
                 GetInput();
+            }
 
             while (args[0] != "q")
             {
@@ -41,7 +44,7 @@ namespace CmdCoffee.Cli
                 }
                 catch (Exception ex)
                 {
-                    _outputWriter.AwaitAnyKey(ex.Message);
+                    _outputWriter.WriteError(ex);
                 }
 
                 GetInput();
@@ -54,11 +57,8 @@ namespace CmdCoffee.Cli
 
             void GetInput()
             {
-                const string enterSelection = "Please enter selection. Type 'help' for options; 'q' to quit.";
-
                 do
                 {
-                    _outputWriter.WriteLine(enterSelection);
                     var input = _inputReader.ReadLine();
                     args = input?.Split(" ");
                 } while (NeedInput());

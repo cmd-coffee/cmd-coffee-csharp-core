@@ -25,7 +25,21 @@ namespace CmdCoffee.Cli
 
         public void WriteError(string errorMessage)
         {
-            AwaitAnyKey(errorMessage);
+            Console.WriteLine(errorMessage);
+        }
+
+        public void WriteError(Exception ex)
+        {
+            var aggregateException = ex as AggregateException;
+            if (aggregateException != null)
+            {
+                if (aggregateException.InnerExceptions.Count == 1)
+                { 
+                    Console.WriteLine(ex.InnerException.Message);
+                    return;
+                }
+            }
+            Console.WriteLine(ex.Message);
         }
 
         public bool AskYesNo(string question)

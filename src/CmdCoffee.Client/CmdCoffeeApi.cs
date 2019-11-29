@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
@@ -52,6 +53,11 @@ namespace CmdCoffee.Client
                 .PostJsonAsync(new {productCode = productCode, shippingAddress = address, promoCode = promoCode});
 
             var result = httpResponseMessage.Content.ReadAsStringAsync().Result;
+
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Unauthorized. Please verify your access-key.");
+            }
 
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
