@@ -1,4 +1,6 @@
-﻿namespace CmdCoffee.Cli
+﻿using System;
+
+namespace CmdCoffee.Cli
 {
     public class App
     {
@@ -22,20 +24,25 @@
 
             while (args[0] != "q")
             {
-                var output = "";
-                var command = args[0];
-
-                if (command == "help")
+                try
                 {
-                    output = _coffeeCommander.Help;
-                }
+                    var command = args[0];
 
-                else if (!string.IsNullOrEmpty(command))
+                    if (command == "help")
+                    {
+                        _outputWriter.WriteLine(_coffeeCommander.Help);
+                    }
+
+                    else if (!string.IsNullOrEmpty(command))
+                    {
+                        _coffeeCommander.Execute(args);
+                    }
+
+                }
+                catch (Exception ex)
                 {
-                    output = _coffeeCommander.Execute(args);
+                    _outputWriter.AwaitAnyKey(ex.Message);
                 }
-
-                _outputWriter.WriteLine(output);
 
                 GetInput();
             }

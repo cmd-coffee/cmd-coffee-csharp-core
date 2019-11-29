@@ -8,24 +8,26 @@ namespace CmdCoffee.Cli
     {
         private readonly IOutputGenerator _outputGenerator;
         private readonly ICmdCoffeeApi _cmdCoffeeApi;
+        private readonly IOutputWriter _outputWriter;
         public string Name => "orders";
         public string Parameters => "[order-key]";
         public string Description => "list your orders. specify order-key to see additional details";
 
-        public OrdersCommand(IOutputGenerator outputGenerator, ICmdCoffeeApi cmdCoffeeApi)
+        public OrdersCommand(IOutputGenerator outputGenerator, ICmdCoffeeApi cmdCoffeeApi, IOutputWriter outputWriter)
         {
             _outputGenerator = outputGenerator;
             _cmdCoffeeApi = cmdCoffeeApi;
+            _outputWriter = outputWriter;
         }
 
-        public string Execute(IList<string> args)
+        public void Execute(IList<string> args)
         {
             if (args == null || !args.Any())
             {
                 var result = _cmdCoffeeApi.GetOrders().Result as IEnumerable<dynamic>;
 
-                return _outputGenerator.GenerateTable(result, new[] { "order key", "product name", "status", "total (usd)", "date created" },
-                    o => o.orderKey, o => o.productName, o => o.status, o => o.total, o => o.dateCreated);
+                _outputWriter.WriteLine(_outputGenerator.GenerateTable(result, new[] { "order key", "product name", "status", "total (usd)", "date created" },
+                    o => o.orderKey, o => o.productName, o => o.status, o => o.total, o => o.dateCreated));
             }
             else
             {
@@ -34,11 +36,12 @@ namespace CmdCoffee.Cli
                 var order = _cmdCoffeeApi.GetOrder(orderKey).Result;
 
                 if (order != null)
-                { 
-                    return _outputGenerator.GeneratePairs((IEnumerable < KeyValuePair < string, object >>) order);
+                {
+                    _outputWriter.WriteLine(_outputGenerator.GeneratePairs((IEnumerable < KeyValuePair < string, object >>) order));
+                    return;
                 }
 
-                return $"No order found: {orderKey}";
+                _outputWriter.WriteError($"No order found: {orderKey}");
             }
 
         }

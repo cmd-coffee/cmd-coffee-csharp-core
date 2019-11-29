@@ -8,17 +8,19 @@ namespace CmdCoffee.Cli
     {
         private readonly IOutputGenerator _outputGenerator;
         private readonly ICmdCoffeeApi _cmdCoffeeApi;
+        private readonly IOutputWriter _outputWriter;
         public string Name => "products";
         public string Description => "list available coffees for order. specify product-code to see additional details";
         public string Parameters => "[product-code]";
 
-        public ProductsCommand(IOutputGenerator outputGenerator, ICmdCoffeeApi cmdCoffeeApi)
+        public ProductsCommand(IOutputGenerator outputGenerator, ICmdCoffeeApi cmdCoffeeApi, IOutputWriter outputWriter)
         {
             _outputGenerator = outputGenerator;
             _cmdCoffeeApi = cmdCoffeeApi;
+            _outputWriter = outputWriter;
         }
 
-        public string Execute(IList<string> args)
+        public void Execute(IList<string> args)
         {
             string output;
 
@@ -42,7 +44,7 @@ namespace CmdCoffee.Cli
                     : $"no product found: {productCode}";
             }
 
-            return output;
+            _outputWriter.WriteLine(output);
         }
     }
 }

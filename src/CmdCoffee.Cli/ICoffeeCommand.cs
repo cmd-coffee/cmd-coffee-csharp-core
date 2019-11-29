@@ -7,6 +7,6 @@ namespace CmdCoffee.Cli
         string Name { get; }
         string Parameters { get; }
         string Description { get; }
-        string Execute(IList<string> args);
+        void Execute(IList<string> args);
     }
 }

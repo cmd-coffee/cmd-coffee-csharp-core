@@ -30,6 +30,21 @@ namespace CmdCoffee.Client
             return await GetBaseRequest($"orders/{orderKey}").GetJsonAsync();
        }
 
+        public async Task<dynamic> Join(string inviteCode)
+        {
+            var httpResponseMessage = await GetBaseRequest("join")
+                .PostJsonAsync(new { inviteCode = inviteCode});
+
+            var result = httpResponseMessage.Content.ReadAsStringAsync().Result;
+
+            if (!httpResponseMessage.IsSuccessStatusCode)
+            {
+                throw new Exception(result);
+            }
+
+            return JObject.Parse(result);
+        }
+
         public async Task<dynamic> PostOrder(string productCode, dynamic address, string promoCode)
         {
 

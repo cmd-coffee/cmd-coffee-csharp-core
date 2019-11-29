@@ -6,6 +6,70 @@ using Newtonsoft.Json.Linq;
 
 namespace CmdCoffee.Cli
 {
+    public class InitCommand : ICoffeeCommand
+    {
+        private readonly ICmdCoffeeApi _cmdCoffeeApi;
+        private readonly Func<ICmdCoffeeApiSettings> _apiSettingsFactory;
+        private readonly IOutputWriter _outputWriter;
+        private readonly IInputReader _inputReader;
+        public string Name => "init";
+        public string Parameters => "invite-code";
+        public string Description => "request an access-key";
+
+        public InitCommand(ICmdCoffeeApi cmdCoffeeApi, Func<ICmdCoffeeApiSettings> apiSettingsFactory,
+            IOutputWriter outputWriter, IInputReader inputReader)
+        {
+            _cmdCoffeeApi = cmdCoffeeApi;
+            _apiSettingsFactory = apiSettingsFactory;
+            _outputWriter = outputWriter;
+            _inputReader = inputReader;
+        }
+
+        public void Execute(IList<string> args)
+        {
+            var appSettings = _apiSettingsFactory();
+
+            if (!string.IsNullOrEmpty(appSettings.AccessKey))
+            {
+                _outputWriter.WriteError("An access-key is already specified in your settings.");
+                return;
+            }
+
+            var inviteCode = args.FirstOrDefault();
+
+            if (string.IsNullOrEmpty(inviteCode))
+            {
+                _outputWriter.WriteError("'invite-code' is required");
+                return;
+            }
+
+            var result = _cmdCoffeeApi.Join(inviteCode).Result;
+
+            _outputWriter.WriteLine("\nInvite code accepted!");
+            _outputWriter.WriteLine($"\n{result.legal}");
+            _outputWriter.WriteLine($"{result.termsOfUse}"); 
+            _outputWriter.WriteLine($"{result.privacyPolicy}"); 
+
+            var answer = _outputWriter.AskYesNo("Ok?");
+
+            if (!answer)
+            {
+                _outputWriter.AwaitAnyKey("Okay. When you change your mind, we're here for you");
+                return;
+            }
+
+            _outputWriter.WriteLine($"\n{result.welcomeMessage}");
+
+            _outputWriter.WriteLine($"access-key: {result.accessKey}");
+
+            _outputWriter.WriteLine("\nTo use your accessKey, update your app-settings.json file");
+            _outputWriter.WriteLine("Update your shipping address while you're at it!");
+
+            _outputWriter.AwaitAnyKey();
+        }
+
+    }
+
     public class BuyCommand : ICoffeeCommand
     {
         private readonly ICmdCoffeeApi _cmdCoffeeApi;
@@ -27,7 +91,7 @@ namespace CmdCoffee.Cli
             _appSettings = appSettingsFactory();
         }
 
-        public string Execute(IList<string> args)
+        public void Execute(IList<string> args)
         {
             try
             {
@@ -35,14 +99,16 @@ namespace CmdCoffee.Cli
 
                 if (string.IsNullOrEmpty(productCode))
                 {
-                    return "product-code required";
+                    _writer.WriteError("product-code required");
+                    return;
                 }
 
                 var promoCode = args.Count() > 1 ? args[1] : string.Empty;
 
                 if (_appSettings.ShippingAddress == null)
                 {
-                    return "shipping address required";
+                    _writer.WriteError("shipping address required");
+                    return;
                 }
 
                 var result = _cmdCoffeeApi.PostOrder(productCode, _appSettings.ShippingAddress, promoCode).Result;
@@ -63,16 +129,18 @@ namespace CmdCoffee.Cli
                 _writer.WriteLine("Is this correct? (y/n)");
                 if (_reader.ReadLine().ToLower() != "y")
                 {
-                    return
-                        "If your address is not correct, please update your address in app-settings.json and try again.";
+                    _writer.AwaitAnyKey(
+                        "If your address is not correct, please update your address in app-settings.json and try again.");
+                    return;
                 }
 
                 _writer.WriteLine($"Check out our return policy: {result.returnPolicy}");
                 _writer.WriteLine("Does that work for you? (y/n)");
                 if (_reader.ReadLine().ToLower() != "y")
                 {
-                    return
-                        $"Bummer. Feel free to shoot us an email to {_appSettings.ContactEmail} to share your concerns.";
+                    _writer.AwaitAnyKey(
+                        $"Bummer. Feel free to shoot us an email to {_appSettings.ContactEmail} to share your concerns.");
+                    return;
                 }
 
                 _writer.WriteLine($"\nWe'll get started on your order as soon as we receive payment.");
@@ -85,14 +153,14 @@ namespace CmdCoffee.Cli
                 _writer.WriteLine($"or use this link {_appSettings.PayPalAddress}{order.total}USD");
                 _writer.WriteLine($"Include your order key ({order.orderKey}) in the payment notes.");
 
-                _writer.WriteLine("Press any key to return to main menu");
-                _reader.ReadLine();
+                _writer.AwaitAnyKey();
 
-                return string.Empty;
+                return;
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                _writer.WriteError(ex.Message);
+                return;
             }
         }
     }
