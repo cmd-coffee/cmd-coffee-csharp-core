@@ -2,15 +2,15 @@
 {
     public class ShippingAddress
     {
-        public string name { get; set; }
-        public string company { get; set; }
-        public string address1 { get; set; }
-        public string address2 { get; set; }
-        public string city { get; set; }
-        public string state { get; set; }
-        public string zip { get; set; }
-        public string phone { get; set; }
-        public string email { get; set; }
+        public string Name { get; set; }
+        public string Company { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
 
     }
 }
