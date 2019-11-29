@@ -17,9 +17,7 @@ namespace CmdCoffee.Cli
 
         public void AwaitAnyKey(string message = default)
         {
-            if (!string.IsNullOrEmpty(message))
-                Console.WriteLine(message);
-            Console.WriteLine("Press enter to continue");
+            Console.WriteLine(!string.IsNullOrEmpty(message) ? message : "Press enter to continue");
             Console.ReadLine();
         }
 

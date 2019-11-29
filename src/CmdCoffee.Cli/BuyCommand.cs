@@ -62,17 +62,16 @@ namespace CmdCoffee.Cli
                 _writer.WriteLine(
                     $"{_outputGenerator.GeneratePairs((IEnumerable<KeyValuePair<string, JToken>>) order.shippingAddress, "shipping address")}");
 
-                _writer.WriteLine("Is this correct? (y/n)");
-                if (_reader.ReadLine().ToLower() != "y")
+                if (!_writer.AskYesNo("Is this correct?"))
                 {
-                    _writer.AwaitAnyKey(
+                    _writer.WriteLine(
                         "If your address is not correct, please update your address in app-settings.json and try again.");
                     return;
                 }
 
-                _writer.WriteLine($"Check out our return policy: {result.returnPolicy}");
-                _writer.WriteLine("Does that work for you? (y/n)");
-                if (_reader.ReadLine().ToLower() != "y")
+                _writer.WriteLine($"\nCheck out our return policy: {result.returnPolicy}");
+                
+                if (!_writer.AskYesNo("Does that work for you?"))
                 {
                     _writer.AwaitAnyKey(
                         $"Bummer. Feel free to shoot us an email to {_appSettings.ContactEmail} to share your concerns.");
@@ -81,9 +80,8 @@ namespace CmdCoffee.Cli
 
                 _writer.WriteLine($"\nWe'll get started on your order as soon as we receive payment.");
                 _writer.WriteLine($"Payment will be accepted until {result.paymentExpiration}");
-                _writer.WriteLine("Press any key to see payment methods");
-                _reader.ReadLine();
-
+                _writer.AwaitAnyKey("Press enter to see payment methods");
+                
                 _writer.WriteLine($"Send cryptocurrency payment to one of these addresses: {result.paymentOptions}");
 
                 _writer.WriteLine($"or use this link {_appSettings.PayPalAddress}{order.total}USD");
