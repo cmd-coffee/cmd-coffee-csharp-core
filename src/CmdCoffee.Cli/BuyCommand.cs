@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CmdCoffee.Client;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace CmdCoffee.Cli
 {
@@ -81,11 +82,16 @@ namespace CmdCoffee.Cli
                 _writer.WriteLine($"\nWe'll get started on your order as soon as we receive payment.");
                 _writer.WriteLine($"Payment will be accepted until {result.paymentExpiration}");
                 _writer.AwaitAnyKey("Press enter to see payment methods");
-                
-                _writer.WriteLine($"Send cryptocurrency payment to one of these addresses: {result.paymentOptions}");
 
-                _writer.WriteLine($"or use this link {_appSettings.PayPalAddress}{order.total}USD");
-                _writer.WriteLine($"Include your order key ({order.orderKey}) in the payment notes.");
+                var paymentOptions = new List<dynamic>();
+                paymentOptions.AddRange(result.paymentOptions as IEnumerable<dynamic>);
+                var paypalAddress = $"{_appSettings.PayPalAddress}{order.total}USD";
+                paymentOptions.Add(new {Name = "PayPal.Me", Value = new { amount = order.total, address = paypalAddress} });
+
+                _writer.WriteLine(_outputGenerator.GenerateTable(paymentOptions, new []{"Type", "Amount", "Address"},
+                    o => o.Name, o=> o.Value.amount, o=> o.Value.address));
+
+                _writer.WriteLine($"Make sure you include your order key ({order.orderKey}) in the payment note.");
 
                 _writer.AwaitAnyKey();
 
