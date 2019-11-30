@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CmdCoffee.Client;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 
 namespace CmdCoffee.Cli
 {
@@ -11,7 +10,6 @@ namespace CmdCoffee.Cli
     {
         private readonly ICmdCoffeeApi _cmdCoffeeApi;
         private readonly IOutputWriter _writer;
-        private readonly IInputReader _reader;
         private readonly IOutputGenerator _outputGenerator;
         private readonly IAppSettings _appSettings;
         public string Name => "buy";
@@ -19,11 +17,10 @@ namespace CmdCoffee.Cli
         public string Description => "place an order for one of our products";
 
         public BuyCommand(ICmdCoffeeApi cmdCoffeeApi, Func<IAppSettings> appSettingsFactory,
-            IOutputWriter writer, IInputReader reader, IOutputGenerator outputGenerator)
+            IOutputWriter writer, IOutputGenerator outputGenerator)
         {
             _cmdCoffeeApi = cmdCoffeeApi;
             _writer = writer;
-            _reader = reader;
             _outputGenerator = outputGenerator;
             _appSettings = appSettingsFactory();
         }
