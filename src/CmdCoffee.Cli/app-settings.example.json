@@ -1,7 +1,6 @@
 ﻿{
   "Configuration": {
     "CmdCoffeeApiAddress": "http://api.cmd.coffee",
-    "AccessKey": "your-access-key",
     "ShippingAddress": {
       "name": "Coffee Drinker",
       "company": "cmd.coffee (optional)",

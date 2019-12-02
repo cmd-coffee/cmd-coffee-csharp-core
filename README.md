@@ -12,8 +12,9 @@ See [Git Action](https://github.com/cmd-coffee/cmd-coffee-csharp-core/actions) f
 > Right now the only way to install this client is by building from source. You'll need to have [dotnet-core 3.0](https://dotnet.microsoft.com/download/dotnet-core/3.0) installed to do so.
 
 ```sh
-> git clone git@github.com:cmd-coffee/cmd-coffee-cshare-core.git
+> git clone https://github.com/cmd-coffee/cmd-coffee-csharp-core.git
 > cd cmd-coffee-csharp-core/src
+> copy cmdcoffee.cli\app-settings.example.json cmdcoffee.cli\app-settings.json
 > dotnet build --configuration Release
 ```
 
