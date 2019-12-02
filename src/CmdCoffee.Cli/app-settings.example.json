@@ -1,6 +1,6 @@
 ﻿{
   "Configuration": {
-    "CmdCoffeeApiAddress": "http://api.cmd.coffee",
+    "CmdCoffeeApiAddress": "https://cmd-coffee-api.azurewebsites.net",
     "ShippingAddress": {
       "name": "Coffee Drinker",
       "company": "cmd.coffee (optional)",
