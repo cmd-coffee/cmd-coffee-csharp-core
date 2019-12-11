@@ -21,7 +21,8 @@ See [Git Action](https://github.com/cmd-coffee/cmd-coffee-csharp-core/actions) f
 ### Usage
 
 ```sh
-> ./CmdCoffee.Cli/bin/Release/netcoreapp3.0/cmdcoffee.cli
+> cd CmdCoffee.Cli\bin\Release\netcoreapp3.0
+> cmdcoffee.cli
 
 cmd.coffee> help
 
@@ -31,6 +32,9 @@ cmd.coffee> help
 | buy product-code [promo-code] | place an order for one of our products                                           |
 | orders [order-key]            | list your orders. specify order-key to see additional details                    |
 | init invite-code              | request an access-key                                                            |
+
+cmd.coffee> init 'your-invite-code'
+
 ```
 
 ## Contributing
