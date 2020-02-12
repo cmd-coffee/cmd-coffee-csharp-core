@@ -48,6 +48,10 @@ namespace CmdCoffee.Client
 
         public async Task<dynamic> PostOrder(string productCode, dynamic address, string promoCode)
         {
+            if (string.IsNullOrEmpty(_apiSettings.AccessKey))
+            {
+                throw new Exception("No Api key provided. Please run init and try again.");
+            }
 
             var httpResponseMessage = await GetBaseRequest("orders")
                 .PostJsonAsync(new {productCode = productCode, shippingAddress = address, promoCode = promoCode});
