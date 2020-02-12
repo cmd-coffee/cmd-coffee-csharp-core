@@ -50,7 +50,7 @@ namespace CmdCoffee.Client
         {
             if (string.IsNullOrEmpty(_apiSettings.AccessKey))
             {
-                throw new Exception("No Api key provided. Please run init and try again.");
+                throw new Exception($"No Api key provided. Please verify json settings or run init and try again.\nYou can find the settings file here: {_apiSettings.SettingsFile}");
             }
 
             var httpResponseMessage = await GetBaseRequest("orders")
